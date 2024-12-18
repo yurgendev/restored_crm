@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 /** @var array $companies */
 /** @var array $auctions */
 /** @var array $warehouses */
-/** @var array $statuses */
+
 
 ?>
 
@@ -23,10 +23,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'vin')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'lot')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'date_purchase')->input('date') ?>
-    <?= $form->field($model, 'date_dispatch')->input('date') ?>
+    
 
     <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'has_keys')->checkbox() ?>
     <br>
     <br>
     <?= $form->field($model, 'account_id')->dropDownList($accounts, ['prompt' => 'Выберите аккаунт']) ?>
@@ -45,14 +46,13 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'photoLFiles[]')->fileInput(['multiple' => true]) ?>
     <br>
     <br>
-    <?= $form->field($model, 'status')->dropDownList($statuses, ['prompt' => 'Выберите статус']) ?>
-    <?= $form->field($model, 'status_changed')->input('date') ?>
-    <?= $form->field($model, 'date_warehouse')->input('date') ?>
+    <!-- <?= $form->field($model, 'status_changed')->input('date') ?> -->
     <?= $form->field($model, 'payment_date')->input('date') ?>
+    <?= $form->field($model, 'date_dispatch')->input('date') ?>
+    <?= $form->field($model, 'date_warehouse')->input('date') ?>
     <?= $form->field($model, 'date_booking')->input('date') ?>
     <?= $form->field($model, 'date_container')->input('date') ?>
     <?= $form->field($model, 'date_unloaded')->input('date') ?>
-    <?= $form->field($model, 'has_keys')->checkbox() ?>
     <?= $form->field($model, 'line')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'booking_number')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'container')->textInput(['maxlength' => true]) ?>

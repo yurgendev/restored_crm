@@ -28,23 +28,21 @@ $this->params['breadcrumbs'][] = 'Deep Update';
         'options' => ['enctype'=>'multipart/form-data'],
     ]); ?>
 
-        <?= $form->field($model, 'status')->dropDownList($model::getStatuses(), ['prompt' => 'Select Status']) ?>
+        <!-- <?= $form->field($model, 'status')->dropDownList($model::getStatuses(), ['prompt' => 'Select Status']) ?> -->
 
         <?= $form->field($model, 'auto')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'vin')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'lot')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'has_keys')->dropDownList(['1' => 'Yes', '0' => 'No'], ['prompt' => 'Select']) ?>
-        <?= $form->field($model, 'status_changed')->input('date') ?>
-        <?= $form->field($model, 'date_purchase')->input('date') ?>
-        <?= $form->field($model, 'date_dispatch')->input('date') ?>
-        <?= $form->field($model, 'date_warehouse')->input('date') ?>
-        <?= $form->field($model, 'payment_date')->input('date') ?>
-        <?= $form->field($model, 'date_booking')->input('date') ?>
-        <?= $form->field($model, 'date_container')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'date_unloaded')->input('date') ?>
-        <?= $form->field($model, 'ata_data')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'date_container')->input('date') ?>
+        <!-- <?= $form->field($model, 'status_changed')->input('date') ?> -->
+        <?= $form->field($model, 'date_purchase')->input('date', ['value' => $model->date_purchase ? date('Y-m-d', strtotime($model->date_purchase)) : '']) ?>
+        <?= $form->field($model, 'payment_date')->input('date', ['value' => $model->payment_date ? date('Y-m-d', strtotime($model->payment_date)) : '']) ?>
+        <?= $form->field($model, 'date_dispatch')->input('date', ['value' => $model->date_dispatch ? date('Y-m-d', strtotime($model->date_dispatch)) : '']) ?>
+        <?= $form->field($model, 'date_warehouse')->input('date', ['value' => $model->date_warehouse ? date('Y-m-d', strtotime($model->date_warehouse)) : '']) ?>
+        <?= $form->field($model, 'date_booking')->input('date', ['value' => $model->date_booking ? date('Y-m-d', strtotime($model->date_booking)) : '']) ?>
+        <?= $form->field($model, 'date_container')->input('date', ['value' => $model->date_container ? date('Y-m-d', strtotime($model->date_container)) : '']) ?>
+        <?= $form->field($model, 'date_unloaded')->input('date', ['value' => $model->date_unloaded ? date('Y-m-d', strtotime($model->date_unloaded)) : '']) ?>
         <?= $form->field($model, 'account_id')->dropDownList(
             ArrayHelper::map(Account::find()->all(), 'id', 'name'),
             ['prompt' => 'Select Account']

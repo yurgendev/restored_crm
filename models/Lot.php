@@ -89,6 +89,7 @@ class Lot extends \yii\db\ActiveRecord
         ];
     }
 
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -105,6 +106,43 @@ class Lot extends \yii\db\ActiveRecord
                     return false;
                 }
             }
+
+            // Автоматический переход в статус New при наличии Date Purchase
+            if ($this->isNewRecord && !empty($this->date_purchase)) {
+                $this->status = self::STATUS_NEW;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
+            // Автоматический переход в статус Dispatched при наличии Payment Date
+            if ($this->status == self::STATUS_NEW && !empty($this->payment_date)) {
+                $this->status = self::STATUS_DISPATCHED;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
+            // Автоматический переход в статус Terminal при наличии Date Warehouse
+            if ($this->status == self::STATUS_DISPATCHED && !empty($this->date_warehouse)) {
+                $this->status = self::STATUS_TERMINAL;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
+            // Автоматический переход в статус Loading при наличии Date Booking
+            if ($this->status == self::STATUS_TERMINAL && !empty($this->date_booking)) {
+                $this->status = self::STATUS_LOADING;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
+            // Автоматический переход в статус Shipped при наличии Date Container
+            if ($this->status == self::STATUS_LOADING && !empty($this->date_container)) {
+                $this->status = self::STATUS_SHIPPED;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
+            // Автоматический переход в статус Unloaded при наличии Date Unloaded
+            if ($this->status == self::STATUS_SHIPPED && !empty($this->date_unloaded)) {
+                $this->status = self::STATUS_UNLOADED;
+                $this->status_changed = date('Y-m-d H:i:s');
+            }
+
             return true;
         }
         return false;
@@ -132,7 +170,7 @@ class Lot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['auto', 'vin', 'lot', 'date_purchase', 'status'], 'required'],
+            [['auto', 'vin', 'lot', 'date_purchase'], 'required'],
             [['bosFiles', 'photoAFiles', 'photoDFiles', 'photoWFiles', 'videoFiles', 'titleFiles', 'photoLFiles'], 'file', 'maxFiles' => 25],
             [['account_id', 'auction_id', 'customer_id', 'warehouse_id', 'company_id', 'has_keys'], 'integer'],
             [['price'], 'number'],
