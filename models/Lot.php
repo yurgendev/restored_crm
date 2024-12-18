@@ -63,12 +63,12 @@ class Lot extends \yii\db\ActiveRecord
     public $photoLFiles;
 
     const STATUS_NEW = 'New';
-    const STATUS_DISPATCHED = 'dispatched';
-    const STATUS_TERMINAL = 'terminal';
-    const STATUS_LOADING = 'loading';
-    const STATUS_SHIPPED = 'shipped';
-    const STATUS_UNLOADED = 'unloaded';
-    const STATUS_ARCHIVED = 'archived';
+    const STATUS_DISPATCHED = 'Dispatched';
+    const STATUS_TERMINAL = 'Terminal';
+    const STATUS_LOADING = 'Loading';
+    const STATUS_SHIPPED = 'Shipped';
+    const STATUS_UNLOADED = 'Unloaded';
+    const STATUS_ARCHIVED = 'Archived';
 
 
     public static function tableName()
@@ -189,19 +189,7 @@ class Lot extends \yii\db\ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios[self::STATUS_NEW] = ['status', 'payment_date'];
-        $scenarios[self::STATUS_DISPATCHED] = ['status', 'date_warehouse'];
-        $scenarios[self::STATUS_TERMINAL] = ['status', 'date_booking'];
-        $scenarios[self::STATUS_LOADING] = ['status', 'date_container'];
-        $scenarios[self::STATUS_SHIPPED] = ['status', 'date_unloaded'];
-        $scenarios[self::STATUS_UNLOADED] = ['status'];
-        $scenarios[self::STATUS_ARCHIVED] = ['status'];
 
-        return $scenarios;
-    }
 
     public function validateStatusTransition($attribute, $params)
     {
@@ -492,14 +480,4 @@ class Lot extends \yii\db\ActiveRecord
         }
         return $initialPreviewConfig;
     }
-
-    
-
 }
-
-
-
-       
-
-
-
