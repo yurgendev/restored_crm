@@ -62,7 +62,7 @@ class Lot extends \yii\db\ActiveRecord
     public $titleFiles;
     public $photoLFiles;
 
-    const STATUS_NEW = 'new';
+    const STATUS_NEW = 'New';
     const STATUS_DISPATCHED = 'dispatched';
     const STATUS_TERMINAL = 'terminal';
     const STATUS_LOADING = 'loading';

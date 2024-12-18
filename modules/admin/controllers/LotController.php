@@ -89,6 +89,8 @@ class LotController extends Controller
     public function actionCreate()
     {
         $model = new Lot();
+        
+
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
