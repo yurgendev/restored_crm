@@ -308,12 +308,13 @@ class SiteController extends Controller
             $model->photo_l = $this->processFiles($model->photoLFiles, $model->photo_l, 'photo_l');
 
             if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', 'Lot saved successfully.');
+                return $this->redirect(['all-lots']); 
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка сохранения модели: ' . json_encode($model->errors));
             }
         }
-
+    
         return $this->render('deep_update', [
             'model' => $model,
         ]);
