@@ -3,7 +3,7 @@
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=logistic_crm',
-    'username' => 'admin',
+    'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
 
