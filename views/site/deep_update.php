@@ -36,6 +36,15 @@ $this->params['breadcrumbs'][] = 'Deep Update';
         <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'has_keys')->dropDownList(['1' => 'Yes', '0' => 'No'], ['prompt' => 'Select']) ?>
         <!-- <?= $form->field($model, 'status_changed')->input('date') ?> -->
+        <br>
+        <br>
+        <?= $form->field($model, 'photoAFiles[]')->fileInput(['multiple' => true]) ?>
+        <?= $form->field($model, 'photoDFiles[]')->fileInput(['multiple' => true]) ?>
+        <?= $form->field($model, 'photoWFiles[]')->fileInput(['multiple' => true]) ?>
+        <?= $form->field($model, 'videoFiles[]')->fileInput(['multiple' => true]) ?>
+        <?= $form->field($model, 'photoLFiles[]')->fileInput(['multiple' => true]) ?>
+        <br>
+        <br>
         <?= $form->field($model, 'date_purchase')->input('date', ['value' => $model->date_purchase ? date('Y-m-d', strtotime($model->date_purchase)) : '']) ?>
         <?= $form->field($model, 'payment_date')->input('date', ['value' => $model->payment_date ? date('Y-m-d', strtotime($model->payment_date)) : '']) ?>
         <?= $form->field($model, 'date_dispatch')->input('date', ['value' => $model->date_dispatch ? date('Y-m-d', strtotime($model->date_dispatch)) : '']) ?>

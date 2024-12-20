@@ -291,8 +291,27 @@ class SiteController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            // Получение экземпляров загруженных файлов
+            $model->photoAFiles = UploadedFile::getInstances($model, 'photoAFiles');
+            $model->photoDFiles = UploadedFile::getInstances($model, 'photoDFiles');
+            $model->photoWFiles = UploadedFile::getInstances($model, 'photoWFiles');
+            $model->videoFiles = UploadedFile::getInstances($model, 'videoFiles');
+            $model->photoLFiles = UploadedFile::getInstances($model, 'photoLFiles');
+
+            // Обработка и сохранение файлов
+            $model->photo_a = $this->processFiles($model->photoAFiles, $model->photo_a, 'photo_a');
+            $model->photo_d = $this->processFiles($model->photoDFiles, $model->photo_d, 'photo_d');
+            $model->photo_w = $this->processFiles($model->photoWFiles, $model->photo_w, 'photo_w');
+            $model->video = $this->processFiles($model->videoFiles, $model->video, 'video');
+            $model->photo_l = $this->processFiles($model->photoLFiles, $model->photo_l, 'photo_l');
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка сохранения модели: ' . json_encode($model->errors));
+            }
         }
 
         return $this->render('deep_update', [
@@ -300,20 +319,21 @@ class SiteController extends Controller
         ]);
     }
 
-    protected function processFiles($uploadedFiles, $existingFiles, $type)
-    {
-        $savedFileNames = [];
-        foreach ($uploadedFiles as $file) {
-            $fileName = uniqid() . '.' . $file->extension;
-            $filePath = Yii::getAlias('@webroot/uploads/' . $type . '/' . $fileName);
-            if ($file->saveAs($filePath)) {
-                $savedFileNames[] = $fileName;
-            }
+
+protected function processFiles($uploadedFiles, $existingFiles, $type)
+{
+    $savedFileNames = [];
+    foreach ($uploadedFiles as $file) {
+        $fileName = uniqid() . '.' . $file->extension;
+        $filePath = Yii::getAlias('@webroot/uploads/' . $type . '/' . $fileName);
+        if ($file->saveAs($filePath)) {
+            $savedFileNames[] = 'uploads/' . $type . '/' . $fileName; // Сохраняем относительный путь
         }
-        $existingFilesArray = $existingFiles ? explode(',', $existingFiles) : [];
-        $allFiles = array_merge($existingFilesArray, $savedFileNames);
-        return implode(',', $allFiles);
     }
+    $existingFilesArray = $existingFiles ? explode(',', $existingFiles) : [];
+    $allFiles = array_merge($existingFilesArray, $savedFileNames);
+    return implode(',', $allFiles);
+}
 
 
     public function actionNew()

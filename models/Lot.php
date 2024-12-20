@@ -171,7 +171,7 @@ class Lot extends \yii\db\ActiveRecord
     {
         return [
             [['auto', 'vin', 'lot', 'date_purchase'], 'required'],
-            [['bosFiles', 'photoAFiles', 'photoDFiles', 'photoWFiles', 'videoFiles', 'titleFiles', 'photoLFiles'], 'file', 'maxFiles' => 25],
+            [['bosFiles', 'photoAFiles', 'photoDFiles', 'photoWFiles', 'videoFiles', 'titleFiles', 'photoLFiles'], 'file', 'maxFiles' => 25, 'maxSize' => 1024 * 1024 * 10],
             [['account_id', 'auction_id', 'customer_id', 'warehouse_id', 'company_id', 'has_keys'], 'integer'],
             [['price'], 'number'],
             [['status_changed', 'date_purchase', 'date_warehouse', 'payment_date', 'date_booking', 'date_container', 'date_unloaded', 'ata_data', 'date_dispatch'], 'safe'],
