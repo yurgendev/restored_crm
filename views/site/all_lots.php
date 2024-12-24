@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\LinkPager;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -18,13 +19,13 @@ $this->title = 'All Lots';
 <div class="site-all-lots">
     <h1><?= Html::encode($this->title) ?></h1>
 
-<!-- Форма поиска -->
-<form method="get" action="<?= Url::to(['site/all-lots']) ?>" class="mb-3">
-    <div class="input-group">
-        <?= Html::activeTextInput($searchModel, 'search', ['class' => 'form-control', 'placeholder' => 'Type VIN, Lot or Auto']) ?>
-        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
-    </div>
-</form>
+    <!-- Форма поиска -->
+    <form method="get" action="<?= Url::to(['site/all-lots']) ?>" class="mb-3">
+        <div class="input-group">
+            <?= Html::activeTextInput($searchModel, 'search', ['class' => 'form-control', 'placeholder' => 'Type VIN, Lot or Auto']) ?>
+            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
 
     <div class="table-responsive">
         <table class="table table-striped">
@@ -41,7 +42,7 @@ $this->title = 'All Lots';
                     </th>
                     <th>Auto</th>
                     <th>VIN</th>
-                    <th>Lot</th> 
+                    <th>Lot</th>
                     <th>
                         Company
                         <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
@@ -69,9 +70,30 @@ $this->title = 'All Lots';
                         ]) ?>
                         <?= Html::endForm() ?>
                     </th>
-                    <th>Keys</th>
-                    <th>BOS</th>
-                    <th>Title</th>
+                    <th>Keys
+                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
+                        <?= Html::dropDownList('LotSearch[keys_filter]', $searchModel->keys_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                            'class' => 'form-control',
+                            'onchange' => 'this.form.submit()',
+                        ]) ?>
+                        <?= Html::endForm() ?>
+                    </th>
+                    <th>BOS
+                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
+                        <?= Html::dropDownList('LotSearch[bos_filter]', $searchModel->bos_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                            'class' => 'form-control',
+                            'onchange' => 'this.form.submit()',
+                        ]) ?>
+                        <?= Html::endForm() ?>
+                    </th>
+                    <th>Title
+                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
+                        <?= Html::dropDownList('LotSearch[title_filter]', $searchModel->title_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                            'class' => 'form-control',
+                            'onchange' => 'this.form.submit()',
+                        ]) ?>
+                        <?= Html::endForm() ?>
+                    </th>
                     <th>Photo A
                         <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[photoA_filter]', $searchModel->photoA_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [

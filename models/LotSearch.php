@@ -11,6 +11,9 @@ class LotSearch extends Lot
     public $photoD_filter;
     public $photoW_filter;
     public $photoL_filter;
+    public $keys_filter;
+    public $bos_filter;
+    public $title_filter;
 
     public function rules()
     {
@@ -18,7 +21,7 @@ class LotSearch extends Lot
             [['id', 'account_id', 'auction_id', 'customer_id', 'warehouse_id', 'company_id', 'has_keys'], 'integer'],
             [['bos', 'photo_a', 'photo_d', 'photo_w', 'video', 'title', 'photo_l', 'status', 'status_changed', 'date_purchase', 'date_warehouse', 'payment_date', 'date_booking', 'date_container', 'date_unloaded', 'auto', 'vin', 'lot', 'url', 'line', 'booking_number', 'container', 'ata_data', 'search'], 'safe'],
             [['price'], 'number'],
-            [['photoA_filter', 'photoD_filter', 'photoW_filter', 'photoL_filter'], 'safe'],
+            [['photoA_filter', 'photoD_filter', 'photoW_filter', 'photoL_filter', 'keys_filter', 'bos_filter', 'title_filter'], 'safe'],
         ];
     }
 
@@ -79,21 +82,32 @@ class LotSearch extends Lot
             ]);
         }
 
-        $this->applyPhotoFilter($query, 'photo_a', $this->photoA_filter);
-        $this->applyPhotoFilter($query, 'photo_d', $this->photoD_filter);
-        $this->applyPhotoFilter($query, 'photo_w', $this->photoW_filter);
-        $this->applyPhotoFilter($query, 'photo_l', $this->photoL_filter);
+        $this->applyFilter($query, 'photo_a', $this->photoA_filter);
+        $this->applyFilter($query, 'photo_d', $this->photoD_filter);
+        $this->applyFilter($query, 'photo_w', $this->photoW_filter);
+        $this->applyFilter($query, 'photo_l', $this->photoL_filter);
+        $this->applyFilter($query, 'has_keys', $this->keys_filter);
+        $this->applyFilter($query, 'bos', $this->bos_filter);
+        $this->applyFilter($query, 'title', $this->title_filter);
 
         return $dataProvider;
     }
 
-    private function applyPhotoFilter($query, $attribute, $filter)
+    private function applyFilter($query, $attribute, $filter)
     {
-        if ($filter === 'Yes') {
-            $query->andWhere(['not', [$attribute => null]]);
-            $query->andWhere(['<>', $attribute, '']);
-        } elseif ($filter === 'No') {
-            $query->andWhere(['or', [$attribute => null], [$attribute => '']]);
+        if ($filter === 'Yes' || $filter === '1') {
+            if ($attribute === 'has_keys') {
+                $query->andWhere(['has_keys' => 1]);
+            } else {
+                $query->andWhere(['not', [$attribute => null]]);
+                $query->andWhere(['<>', $attribute, '']);
+            }
+        } elseif ($filter === 'No' || $filter === '0') {
+            if ($attribute === 'has_keys') {
+                $query->andWhere(['has_keys' => 0]);
+            } else {
+                $query->andWhere(['or', [$attribute => null], [$attribute => '']]);
+            }
         }
     }
 }
