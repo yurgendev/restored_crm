@@ -4,7 +4,6 @@ use yii\widgets\LinkPager;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use app\components\FilterHelper;
 
 /** @var yii\web\View $this */
 /** @var app\models\LotSearch $searchModel */
@@ -38,93 +37,72 @@ $this->title = 'All Lots';
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Auto</th>
                     <th>VIN</th>
                     <th>Lot</th>
                     <th>
                         Company
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[company_id]', $searchModel->company_id, ['' => 'All'] + ArrayHelper::map($companies, 'id', 'name'), [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>
                         Customer
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[customer_id]', $searchModel->customer_id, ['' => 'All'] + ArrayHelper::map($customers, 'id', 'name'), [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>
                         Warehouse
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[warehouse_id]', $searchModel->warehouse_id, ['' => 'All'] + ArrayHelper::map($warehouses, 'id', 'name'), [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Keys
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[keys_filter]', $searchModel->keys_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>BOS
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[bos_filter]', $searchModel->bos_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Title
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[title_filter]', $searchModel->title_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Photo A
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[photoA_filter]', $searchModel->photoA_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Photo D
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[photoD_filter]', $searchModel->photoD_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Photo W
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[photoW_filter]', $searchModel->photoW_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Photo L
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[photoL_filter]', $searchModel->photoL_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
                         ]) ?>
-                        <?= Html::endForm() ?>
                     </th>
                     <th>Actions</th>
                 </tr>
