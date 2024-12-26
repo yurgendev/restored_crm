@@ -159,7 +159,7 @@ class Lot extends \yii\db\ActiveRecord
             $statusChangedDate = new \DateTime($this->status_changed);
             $currentDate = new \DateTime();
             $interval = $statusChangedDate->diff($currentDate);
-            return $interval->days + 1;
+            return $interval->days;
         }
         return 0;
     }
