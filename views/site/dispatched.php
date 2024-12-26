@@ -17,10 +17,10 @@ $this->title = 'Dispatched Lots';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <!-- Форма поиска -->
-
     <form method="get" action="<?= Url::to(['site/dispatched']) ?>" class="mb-3">
         <div class="input-group">
             <?= Html::activeTextInput($searchModel, 'search', ['class' => 'form-control', 'placeholder' => 'Type VIN, Lot or Auto']) ?>
+            <?= Html::hiddenInput('LotSearch[status]', $searchModel->status) ?>
             <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
         </div>
     </form>
