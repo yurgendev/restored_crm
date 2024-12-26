@@ -36,7 +36,6 @@ $this->title = 'New Lots';
                     <th>Account</th>
                     <th>
                         Auction
-                        <?= Html::beginForm(['site/new'], 'get', ['class' => 'filter-form']) ?>
                         <?= Html::dropDownList('LotSearch[auction_id]', $searchModel->auction_id, ['' => 'All'] + ArrayHelper::map($auctions, 'id', 'name'), [
                             'class' => 'form-control',
                             'onchange' => 'this.form.submit()',
@@ -72,7 +71,7 @@ $this->title = 'New Lots';
             <tbody>
                 <?php foreach ($dataProvider->getModels() as $lot): ?>
                     <tr>
-                        <td><?= Html::encode($lot->date_purchase) ?></td>
+                        <td><?= Yii::$app->formatter->asDate($lot->date_purchase, 'php:Y-m-d') ?></td>
                         <td><?= Html::encode($lot->wait) ?></td>
                         <td><?= Html::encode($lot->auto) ?></td>
                         <td><?= Html::encode($lot->vin) ?></td>
@@ -98,7 +97,5 @@ $this->title = 'New Lots';
     </div>
 
     <!-- Пагинация -->
-    <?= LinkPager::widget([
-        'pagination' => $dataProvider->pagination,
-    ]) ?>
+    <?= $this->render('//partials/_pagination', ['pagination' => $dataProvider->pagination]) ?>
 </div>
