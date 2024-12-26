@@ -170,7 +170,7 @@ class Lot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['auto', 'vin', 'lot', 'date_purchase'], 'required'],
+            [['auto', 'vin', 'lot', 'date_purchase', 'customer_id'], 'required'],
             [['bosFiles', 'photoAFiles', 'photoDFiles', 'photoWFiles', 'videoFiles', 'titleFiles', 'photoLFiles'], 'file', 'maxFiles' => 25, 'maxSize' => 1024 * 1024 * 10],
             [['account_id', 'auction_id', 'customer_id', 'warehouse_id', 'company_id', 'has_keys'], 'integer'],
             [['price'], 'number'],
