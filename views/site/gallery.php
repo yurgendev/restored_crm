@@ -6,6 +6,7 @@ use yii\helpers\Url;
 /* @var $images array */
 /* @var $lot app\models\Lot */
 /* @var $type string */
+/* @var $pagination yii\data\Pagination */
 
 $this->title = 'Photo - ' . strtoupper($type);
 ?>
@@ -73,6 +74,9 @@ $this->title = 'Photo - ' . strtoupper($type);
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Пагинация -->
+        <?= $this->render('//partials/_pagination', ['pagination' => $pagination]) ?>
     </div>
 </div>
 

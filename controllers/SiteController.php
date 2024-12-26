@@ -22,6 +22,7 @@ use app\models\Auction;
 use app\models\LotSearch;
 
 
+
 class SiteController extends Controller
 {
     /**
@@ -130,6 +131,8 @@ class SiteController extends Controller
 
 
 
+
+
     public function actionGallery($id, $type)
     {
         $lot = Lot::findOne($id);
@@ -152,6 +155,14 @@ class SiteController extends Controller
         $imagesField = 'photo_' . $type;
         $images = explode(',', $lot->$imagesField);
 
+        // Пагинация
+        $pagination = new Pagination([
+            'totalCount' => count($images),
+            'pageSize' => 5, // Количество изображений на странице
+        ]);
+
+        $images = array_slice($images, $pagination->offset, $pagination->limit);
+
         // Создаем миниатюры и добавляем дату и время загрузки
         $thumbnails = [];
         foreach ($images as $image) {
@@ -173,6 +184,7 @@ class SiteController extends Controller
             'thumbnails' => $thumbnails,
             'lot' => $lot,
             'type' => $type,
+            'pagination' => $pagination,
         ]);
     }
 

@@ -175,7 +175,7 @@ class Lot extends \yii\db\ActiveRecord
             [['account_id', 'auction_id', 'customer_id', 'warehouse_id', 'company_id', 'has_keys'], 'integer'],
             [['price'], 'number'],
             [['status_changed', 'date_purchase', 'date_warehouse', 'payment_date', 'date_booking', 'date_container', 'date_unloaded', 'ata_data', 'date_dispatch'], 'safe'],
-            [['bos', 'photo_a', 'photo_d', 'photo_w', 'video', 'title', 'photo_l', 'auto', 'lot', 'line', 'booking_number', 'container'], 'string', 'max' => 255],
+            [['bos', 'photo_a', 'photo_d', 'photo_w', 'video', 'title', 'photo_l', 'auto', 'lot', 'line', 'booking_number', 'container'], 'string', 'max' => 1024],
             [['vin'], 'string', 'max' => 255],
             [['url'], 'string', 'max' => 200],
             [['vin'], 'unique'],
