@@ -35,9 +35,9 @@ $this->title = 'Photo - ' . strtoupper($type);
             <thead>
                 <tr>
                     <th>#</th> <!-- Порядковый номер -->
-                    <th>Миниатюра</th> <!-- Миниатюра -->
-                    <th>Фото</th>
-                    <th>Действия</th>
+                    <th>Photo</th> <!-- Миниатюра -->
+                    <th>Url</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,7 +53,7 @@ $this->title = 'Photo - ' . strtoupper($type);
                         
                         <!-- Ссылка на фото -->
                         <td>
-                            <a href="<?= Url::to('@web/' . $image) ?>" target="_blank">Открыть фото</a>
+                            <a href="<?= Url::to('@web/' . $image) ?>" target="_blank">Open in new tab</a>
                         </td>
                         
                         <!-- Удаление -->
@@ -66,7 +66,7 @@ $this->title = 'Photo - ' . strtoupper($type);
                                 <?= Html::hiddenInput('id', $lot->id) ?>
                                 <?= Html::hiddenInput('type', $type) ?>
                                 <?= Html::hiddenInput('image', $image) ?>
-                                <?= Html::submitButton('Удалить', ['class' => 'btn btn-danger btn-sm']) ?>
+                                <?= Html::submitButton('<i class="fas fa-trash-alt"></i>', ['class' => 'btn btn-danger btn-sm']) ?>
                             <?= Html::endForm() ?>
                         </td>
                     </tr>
@@ -119,7 +119,7 @@ function updateMainPhoto() {
 
 .main-photo {
     max-width: 100%;
-    max-height: 500px;
+    max-height: 400px;
     object-fit: cover;
 }
 
