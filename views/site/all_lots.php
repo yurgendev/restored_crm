@@ -26,124 +26,126 @@ $this->title = 'All Lots';
         </div>
     </form>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        Status
-                        <?= Html::beginForm(['site/all-lots'], 'get', ['class' => 'filter-form']) ?>
-                        <?= Html::dropDownList('LotSearch[status]', $searchModel->status, ['' => 'All'] + $statuses, [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Auto</th>
-                    <th>VIN</th>
-                    <th>Lot</th>
-                    <th>
-                        Company
-                        <?= Html::dropDownList('LotSearch[company_id]', $searchModel->company_id, ['' => 'All'] + ArrayHelper::map($companies, 'id', 'name'), [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>
-                        Customer
-                        <?= Html::dropDownList('LotSearch[customer_id]', $searchModel->customer_id, ['' => 'All'] + ArrayHelper::map($customers, 'id', 'name'), [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>
-                        Warehouse
-                        <?= Html::dropDownList('LotSearch[warehouse_id]', $searchModel->warehouse_id, ['' => 'All'] + ArrayHelper::map($warehouses, 'id', 'name'), [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Keys
-                        <?= Html::dropDownList('LotSearch[keys_filter]', $searchModel->keys_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>BOS
-                        <?= Html::dropDownList('LotSearch[bos_filter]', $searchModel->bos_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Title
-                        <?= Html::dropDownList('LotSearch[title_filter]', $searchModel->title_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Photo A
-                        <?= Html::dropDownList('LotSearch[photoA_filter]', $searchModel->photoA_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Photo D
-                        <?= Html::dropDownList('LotSearch[photoD_filter]', $searchModel->photoD_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Photo W
-                        <?= Html::dropDownList('LotSearch[photoW_filter]', $searchModel->photoW_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Photo L
-                        <?= Html::dropDownList('LotSearch[photoL_filter]', $searchModel->photoL_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
-                            'class' => 'form-control',
-                            'onchange' => 'this.form.submit()',
-                        ]) ?>
-                    </th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($dataProvider->getModels() as $lot): ?>
+    <!-- Форма фильтрации -->
+    <form method="get" action="<?= Url::to(['site/all-lots']) ?>" class="mb-3">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td><?= Html::encode($lot->status) ?></td>
-                        <td><?= Html::encode($lot->auto) ?></td>
-                        <td><?= Html::encode($lot->vin) ?></td>
-                        <td><?= Html::encode($lot->lot) ?></td>
-                        <td><?= Html::encode($lot->company->name) ?></td>
-                        <td><?= Html::encode($lot->customer->name) ?></td>
-                        <td><?= Html::encode($lot->warehouse->name) ?></td>
-                        <td><?= $lot->has_keys ? '<i class="fas fa-check"></i>' : '' ?></td>
-                        <td><?= $lot->bos ? Html::a('<i class="fas fa-check"></i>', ['site/view-pdf', 'id' => $lot->id, 'type' => 'bos'], ['target' => '_blank']) : '' ?></td>
-                        <td><?= $lot->title ? Html::a('<i class="fas fa-check"></i>', ['site/view-pdf', 'id' => $lot->id, 'type' => 'title'], ['target' => '_blank']) : '' ?></td>
-                        <td>
-                            <?php $photoACount = $lot->getPhotoAFileCount(); ?>
-                            <?= $photoACount > 0 ? Html::a('<span class="photo-count-circle">' . $photoACount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'a'], ['target' => '_blank']) : '' ?>
-                        </td>
-                        <td>
-                            <?php $photoDCount = $lot->getPhotoDFileCount(); ?>
-                            <?= $photoDCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoDCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'd'], ['target' => '_blank']) : '' ?>
-                        </td>
-                        <td>
-                            <?php $photoWCount = $lot->getPhotoWFileCount(); ?>
-                            <?= $photoWCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoWCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'w'], ['target' => '_blank']) : '' ?>
-                        </td>
-                        <td>
-                            <?php $photoLCount = $lot->getPhotoLFileCount(); ?>
-                            <?= $photoLCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoLCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'l'], ['target' => '_blank']) : '' ?>
-                        </td>
-                        <td>
-                            <?= Html::a('<i class="fas fa-edit"></i>', ['site/update-lot', 'id' => $lot->id], ['class' => 'btn btn-outline-primary btn-sm', 'title' => 'Update']) ?>
-                        </td>
+                        <th>
+                            Status
+                            <?= Html::dropDownList('LotSearch[status]', $searchModel->status, ['' => 'All'] + $statuses, [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Auto</th>
+                        <th>VIN</th>
+                        <th>Lot</th>
+                        <th>
+                            Company
+                            <?= Html::dropDownList('LotSearch[company_id]', $searchModel->company_id, ['' => 'All'] + ArrayHelper::map($companies, 'id', 'name'), [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>
+                            Customer
+                            <?= Html::dropDownList('LotSearch[customer_id]', $searchModel->customer_id, ['' => 'All'] + ArrayHelper::map($customers, 'id', 'name'), [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>
+                            Warehouse
+                            <?= Html::dropDownList('LotSearch[warehouse_id]', $searchModel->warehouse_id, ['' => 'All'] + ArrayHelper::map($warehouses, 'id', 'name'), [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Keys
+                            <?= Html::dropDownList('LotSearch[keys_filter]', $searchModel->keys_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>BOS
+                            <?= Html::dropDownList('LotSearch[bos_filter]', $searchModel->bos_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Title
+                            <?= Html::dropDownList('LotSearch[title_filter]', $searchModel->title_filter, ['' => 'All', '1' => 'Yes', '0' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Photo A
+                            <?= Html::dropDownList('LotSearch[photoA_filter]', $searchModel->photoA_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Photo D
+                            <?= Html::dropDownList('LotSearch[photoD_filter]', $searchModel->photoD_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Photo W
+                            <?= Html::dropDownList('LotSearch[photoW_filter]', $searchModel->photoW_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Photo L
+                            <?= Html::dropDownList('LotSearch[photoL_filter]', $searchModel->photoL_filter, ['' => 'All', 'Yes' => 'Yes', 'No' => 'No'], [
+                                'class' => 'form-control',
+                                'onchange' => 'this.form.submit()',
+                            ]) ?>
+                        </th>
+                        <th>Actions</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php foreach ($dataProvider->getModels() as $lot): ?>
+                        <tr>
+                            <td><?= Html::encode($lot->status) ?></td>
+                            <td><?= Html::encode($lot->auto) ?></td>
+                            <td><?= Html::encode($lot->vin) ?></td>
+                            <td><?= Html::encode($lot->lot) ?></td>
+                            <td><?= Html::encode($lot->company->name) ?></td>
+                            <td><?= Html::encode($lot->customer->name) ?></td>
+                            <td><?= Html::encode($lot->warehouse->name) ?></td>
+                            <td><?= $lot->has_keys ? '<i class="fas fa-check"></i>' : '' ?></td>
+                            <td><?= $lot->bos ? Html::a('<i class="fas fa-check"></i>', ['site/view-pdf', 'id' => $lot->id, 'type' => 'bos'], ['target' => '_blank']) : '' ?></td>
+                            <td><?= $lot->title ? Html::a('<i class="fas fa-check"></i>', ['site/view-pdf', 'id' => $lot->id, 'type' => 'title'], ['target' => '_blank']) : '' ?></td>
+                            <td>
+                                <?php $photoACount = $lot->getPhotoAFileCount(); ?>
+                                <?= $photoACount > 0 ? Html::a('<span class="photo-count-circle">' . $photoACount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'a'], ['target' => '_blank']) : '' ?>
+                            </td>
+                            <td>
+                                <?php $photoDCount = $lot->getPhotoDFileCount(); ?>
+                                <?= $photoDCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoDCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'd'], ['target' => '_blank']) : '' ?>
+                            </td>
+                            <td>
+                                <?php $photoWCount = $lot->getPhotoWFileCount(); ?>
+                                <?= $photoWCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoWCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'w'], ['target' => '_blank']) : '' ?>
+                            </td>
+                            <td>
+                                <?php $photoLCount = $lot->getPhotoLFileCount(); ?>
+                                <?= $photoLCount > 0 ? Html::a('<span class="photo-count-circle">' . $photoLCount . '</span>', ['site/gallery', 'id' => $lot->id, 'type' => 'l'], ['target' => '_blank']) : '' ?>
+                            </td>
+                            <td>
+                                <?= Html::a('<i class="fas fa-edit"></i>', ['site/update-lot', 'id' => $lot->id], ['class' => 'btn btn-outline-primary btn-sm', 'title' => 'Update']) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </form>
 
     <!-- Пагинация -->
     <?= $this->render('//partials/_pagination', ['pagination' => $dataProvider->pagination]) ?>
