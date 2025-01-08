@@ -153,19 +153,19 @@ class SiteController extends Controller
 
         // Получаем изображения из соответствующего поля модели Lot
         $imagesField = 'photo_' . $type;
-        $images = explode(',', $lot->$imagesField);
+        $allImages = explode(',', $lot->$imagesField);
 
-        // Пагинация
+        // Пагинация для таблицы
         $pagination = new Pagination([
-            'totalCount' => count($images),
+            'totalCount' => count($allImages),
             'pageSize' => 5, // Количество изображений на странице
         ]);
 
-        $images = array_slice($images, $pagination->offset, $pagination->limit);
+        $pageImages = array_slice($allImages, $pagination->offset, $pagination->limit);
 
         // Создаем миниатюры и добавляем дату и время загрузки
         $thumbnails = [];
-        foreach ($images as $image) {
+        foreach ($pageImages as $image) {
             $thumbnailPath = 'uploads/thumbnails/' . basename($image);
             $fullImagePath = Yii::getAlias('@webroot/' . $image);
             if (!file_exists($thumbnailPath)) {
@@ -180,7 +180,8 @@ class SiteController extends Controller
         }
 
         return $this->render('gallery', [
-            'images' => $images,
+            'allImages' => $allImages,
+            'pageImages' => $pageImages,
             'thumbnails' => $thumbnails,
             'lot' => $lot,
             'type' => $type,

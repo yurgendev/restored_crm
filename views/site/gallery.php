@@ -3,7 +3,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $images array */
+/* @var $allImages array */
+/* @var $pageImages array */
 /* @var $lot app\models\Lot */
 /* @var $type string */
 /* @var $pagination yii\data\Pagination */
@@ -17,16 +18,20 @@ $this->title = 'Photo - ' . strtoupper($type);
     <!-- Основное изображение с кнопками -->
     <div class="main-photo-wrapper">
         <div class="main-photo-container position-relative">
-            <img id="mainPhoto" src="<?= Url::to('@web/' . $images[0]) ?>" class="img-fluid main-photo" alt="Main Photo">
+            <img id="mainPhoto" src="<?= Url::to('@web/' . $allImages[0]) ?>" class="img-fluid main-photo" alt="Main Photo">
             <button class="btn btn-primary btn-prev" onclick="prevPhoto()">‹</button>
             <button class="btn btn-primary btn-next" onclick="nextPhoto()">›</button>
         </div>
-        <div class="thumbnails mt-3 d-flex justify-content-center">
-            <?php foreach ($images as $index => $image): ?>
-                <a href="#" class="thumbnail-link mx-1" data-image="<?= Url::to('@web/' . $image) ?>" onclick="changeMainPhoto(event, <?= $index ?>)">
-                    <img src="<?= Url::to('@web/' . $image) ?>" class="img-thumbnail" alt="Thumbnail">
-                </a>
-            <?php endforeach; ?>
+        <div class="thumbnails-wrapper position-relative mt-3 d-flex justify-content-center">
+            <button class="btn btn-secondary btn-scroll-left" onclick="scrollThumbnails(-1)">‹</button>
+            <div class="thumbnails d-flex justify-content-center">
+                <?php foreach ($allImages as $index => $image): ?>
+                    <a href="#" class="thumbnail-link mx-1" data-image="<?= Url::to('@web/' . $image) ?>" onclick="changeMainPhoto(event, <?= $index ?>)">
+                        <img src="<?= Url::to('@web/' . $image) ?>" class="img-thumbnail <?= $index === 0 ? 'selected-thumbnail' : '' ?>" alt="Thumbnail">
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <button class="btn btn-secondary btn-scroll-right" onclick="scrollThumbnails(1)">›</button>
         </div>
     </div>
 
@@ -42,7 +47,7 @@ $this->title = 'Photo - ' . strtoupper($type);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($images as $index => $image): ?>
+                <?php foreach ($pageImages as $index => $image): ?>
                     <tr>
                         <!-- Порядковый номер -->
                         <td><?= $index + 1 ?></td>
@@ -67,7 +72,7 @@ $this->title = 'Photo - ' . strtoupper($type);
                                 <?= Html::hiddenInput('id', $lot->id) ?>
                                 <?= Html::hiddenInput('type', $type) ?>
                                 <?= Html::hiddenInput('image', $image) ?>
-                                <?= Html::submitButton('<i class="fas fa-trash-alt"></i>', ['class' => 'btn btn-danger btn-sm']) ?>
+                                <?= Html::submitButton(Html::tag('i', '', ['class' => 'fas fa-trash-alt']), ['class' => 'btn btn-danger btn-sm']) ?>
                             <?= Html::endForm() ?>
                         </td>
                     </tr>
@@ -82,27 +87,82 @@ $this->title = 'Photo - ' . strtoupper($type);
 
 <script>
 let currentPhotoIndex = 0;
-const images = <?= json_encode($images) ?>;
+const images = <?= json_encode($allImages) ?>;
+const maxVisibleThumbnails = 15; // Максимальное количество видимых миниатюр
+let thumbnailStartIndex = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+    highlightThumbnail(currentPhotoIndex);
+    updateThumbnails();
+});
 
 function changeMainPhoto(event, index) {
     event.preventDefault();
     currentPhotoIndex = index;
     updateMainPhoto();
+    highlightThumbnail(currentPhotoIndex);
+    adjustThumbnailScroll();
 }
 
 function prevPhoto() {
     currentPhotoIndex = (currentPhotoIndex - 1 + images.length) % images.length;
     updateMainPhoto();
+    highlightThumbnail(currentPhotoIndex);
+    adjustThumbnailScroll();
 }
 
 function nextPhoto() {
     currentPhotoIndex = (currentPhotoIndex + 1) % images.length;
     updateMainPhoto();
+    highlightThumbnail(currentPhotoIndex);
+    adjustThumbnailScroll();
 }
 
 function updateMainPhoto() {
     const newSrc = '<?= Url::to('@web/') ?>' + images[currentPhotoIndex];
     document.getElementById('mainPhoto').setAttribute('src', newSrc);
+}
+
+function highlightThumbnail(index) {
+    const thumbnails = document.querySelectorAll('.thumbnail-link img');
+    thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('selected-thumbnail', i === index);
+    });
+}
+
+function scrollThumbnails(direction) {
+    thumbnailStartIndex = Math.max(0, Math.min(thumbnailStartIndex + direction, images.length - maxVisibleThumbnails));
+    updateThumbnails();
+}
+
+function updateThumbnails() {
+    const thumbnailsContainer = document.querySelector('.thumbnails');
+    thumbnailsContainer.innerHTML = '';
+    for (let i = thumbnailStartIndex; i < Math.min(thumbnailStartIndex + maxVisibleThumbnails, images.length); i++) {
+        const thumbnailLink = document.createElement('a');
+        thumbnailLink.href = '#';
+        thumbnailLink.className = 'thumbnail-link mx-1';
+        thumbnailLink.dataset.image = '<?= Url::to('@web/') ?>' + images[i];
+        thumbnailLink.onclick = (event) => changeMainPhoto(event, i);
+
+        const thumbnailImg = document.createElement('img');
+        thumbnailImg.src = '<?= Url::to('@web/') ?>' + images[i];
+        thumbnailImg.className = 'img-thumbnail';
+        thumbnailImg.alt = 'Thumbnail';
+
+        thumbnailLink.appendChild(thumbnailImg);
+        thumbnailsContainer.appendChild(thumbnailLink);
+    }
+    highlightThumbnail(currentPhotoIndex);
+}
+
+function adjustThumbnailScroll() {
+    if (currentPhotoIndex < thumbnailStartIndex) {
+        thumbnailStartIndex = currentPhotoIndex;
+    } else if (currentPhotoIndex >= thumbnailStartIndex + maxVisibleThumbnails) {
+        thumbnailStartIndex = currentPhotoIndex - maxVisibleThumbnails + 1;
+    }
+    updateThumbnails();
 }
 </script>
 
@@ -123,7 +183,7 @@ function updateMainPhoto() {
 
 .main-photo {
     max-width: 100%;
-    max-height: 400px;
+    max-height: 600px; /* Увеличиваем размер основного фото */
     object-fit: cover;
 }
 
@@ -149,20 +209,55 @@ function updateMainPhoto() {
     right: 10px;
 }
 
+.thumbnails-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-scroll-left, .btn-scroll-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+}
+
+.btn-scroll-left {
+    left: -15px;
+}
+
+.btn-scroll-right {
+    right: -15px;
+}
+
 .thumbnails {
-    overflow-x: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+    flex-grow: 1;
 }
 
 .thumbnail-link img {
-    width: 80px;
-    height: 80px;
+    width: 60px; /* Уменьшаем размер миниатюр */
+    height: 60px;
     object-fit: cover;
     border: 2px solid transparent;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.thumbnail-link img:hover {
+.thumbnail-link img:hover,
+.selected-thumbnail {
     border-color: #007bff;
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 0 0 10px #007bff; /* Единый тип обводки */
 }
 
 .side-list-container {
