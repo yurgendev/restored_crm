@@ -23,7 +23,6 @@ $this->title = 'Photo - ' . strtoupper($type);
             <button class="btn btn-primary btn-next" onclick="nextPhoto()">›</button>
         </div>
         <div class="thumbnails-wrapper position-relative mt-3 d-flex justify-content-center">
-            <button class="btn btn-secondary btn-scroll-left" onclick="scrollThumbnails(-1)">‹</button>
             <div class="thumbnails d-flex justify-content-center">
                 <?php foreach ($allImages as $index => $image): ?>
                     <a href="#" class="thumbnail-link mx-1" data-image="<?= Url::to('@web/' . $image) ?>" onclick="changeMainPhoto(event, <?= $index ?>)">
@@ -31,7 +30,6 @@ $this->title = 'Photo - ' . strtoupper($type);
                     </a>
                 <?php endforeach; ?>
             </div>
-            <button class="btn btn-secondary btn-scroll-right" onclick="scrollThumbnails(1)">›</button>
         </div>
     </div>
 
@@ -88,7 +86,7 @@ $this->title = 'Photo - ' . strtoupper($type);
 <script>
 let currentPhotoIndex = 0;
 const images = <?= json_encode($allImages) ?>;
-const maxVisibleThumbnails = 15; // Максимальное количество видимых миниатюр
+const maxVisibleThumbnails = 10; // Максимальное количество видимых миниатюр
 let thumbnailStartIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -124,8 +122,8 @@ function updateMainPhoto() {
 }
 
 function highlightThumbnail(index) {
-    const thumbnails = document.querySelectorAll('.thumbnail-link img');
-    thumbnails.forEach((thumb, i) => {
+    const allThumbnails = document.querySelectorAll('.thumbnail-link img');
+    allThumbnails.forEach((thumb, i) => {
         thumb.classList.toggle('selected-thumbnail', i === index);
     });
 }
@@ -163,6 +161,7 @@ function adjustThumbnailScroll() {
         thumbnailStartIndex = currentPhotoIndex - maxVisibleThumbnails + 1;
     }
     updateThumbnails();
+    highlightThumbnail(currentPhotoIndex); // Обновление выделения миниатюры после прокрутки
 }
 </script>
 
@@ -216,28 +215,6 @@ function adjustThumbnailScroll() {
     justify-content: center;
 }
 
-.btn-scroll-left, .btn-scroll-right {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.7;
-}
-
-.btn-scroll-left {
-    left: -15px;
-}
-
-.btn-scroll-right {
-    right: -15px;
-}
-
 .thumbnails {
     overflow-x: hidden;
     white-space: nowrap;
@@ -257,7 +234,7 @@ function adjustThumbnailScroll() {
     border-color: #007bff;
     border-width: 2px;
     border-style: solid;
-    box-shadow: 0 0 10px #007bff; /* Единый тип обводки */
+    box-shadow: 0 0 10px #007bff;  /* Единый тип обводки */
 }
 
 .side-list-container {
