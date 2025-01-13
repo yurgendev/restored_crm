@@ -86,57 +86,76 @@ $this->title = 'Photo - ' . strtoupper($type);
 <script>
 let currentPhotoIndex = 0;
 const images = <?= json_encode($allImages) ?>;
-const maxVisibleThumbnails = 10; // Максимальное количество видимых миниатюр
+const maxVisibleThumbnails = 10;
 let thumbnailStartIndex = 0;
 
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    highlightThumbnail(currentPhotoIndex);
     updateThumbnails();
+    highlightThumbnail(currentPhotoIndex);
 });
 
-function changeMainPhoto(event, index) {
-    event.preventDefault();
-    currentPhotoIndex = index;
-    updateMainPhoto();
-    highlightThumbnail(currentPhotoIndex);
-    adjustThumbnailScroll();
-}
-
-function prevPhoto() {
-    currentPhotoIndex = (currentPhotoIndex - 1 + images.length) % images.length;
-    updateMainPhoto();
-    highlightThumbnail(currentPhotoIndex);
-    adjustThumbnailScroll();
-}
-
-function nextPhoto() {
-    currentPhotoIndex = (currentPhotoIndex + 1) % images.length;
-    updateMainPhoto();
-    highlightThumbnail(currentPhotoIndex);
-    adjustThumbnailScroll();
-}
-
+// Обновление основного фото
 function updateMainPhoto() {
     const newSrc = '<?= Url::to('@web/') ?>' + images[currentPhotoIndex];
     document.getElementById('mainPhoto').setAttribute('src', newSrc);
 }
 
+// Смена фото при клике на миниатюру
+function changeMainPhoto(event, index) {
+    event.preventDefault();
+    currentPhotoIndex = index;
+    updateMainPhoto();
+    adjustThumbnailScroll();
+}
+
+// Переход к предыдущему фото
+function prevPhoto() {
+    currentPhotoIndex = (currentPhotoIndex - 1 + images.length) % images.length;
+    updateMainPhoto();
+    adjustThumbnailScroll();
+}
+
+// Переход к следующему фото
+function nextPhoto() {
+    currentPhotoIndex = (currentPhotoIndex + 1) % images.length;
+    updateMainPhoto();
+    adjustThumbnailScroll();
+}
+
+// Выделение активной миниатюры
 function highlightThumbnail(index) {
-    const allThumbnails = document.querySelectorAll('.thumbnail-link img');
-    allThumbnails.forEach((thumb, i) => {
-        thumb.classList.toggle('selected-thumbnail', i === index);
+    const thumbnails = document.querySelectorAll('.thumbnail-link img');
+    thumbnails.forEach((thumb, i) => {
+        const absoluteIndex = i + thumbnailStartIndex;
+        thumb.classList.toggle('selected-thumbnail', absoluteIndex === index);
     });
 }
 
-function scrollThumbnails(direction) {
-    thumbnailStartIndex = Math.max(0, Math.min(thumbnailStartIndex + direction, images.length - maxVisibleThumbnails));
+// Прокрутка миниатюр
+function adjustThumbnailScroll() {
+    // Если текущее фото за пределами видимой области
+    if (currentPhotoIndex < thumbnailStartIndex || 
+        currentPhotoIndex >= thumbnailStartIndex + maxVisibleThumbnails) {
+        
+        // Центрируем текущее фото
+        const center = Math.floor(maxVisibleThumbnails / 2);
+        thumbnailStartIndex = Math.max(0, Math.min(
+            currentPhotoIndex - center,
+            images.length - maxVisibleThumbnails
+        ));
+    }
     updateThumbnails();
 }
 
+// Обновление списка миниатюр
 function updateThumbnails() {
     const thumbnailsContainer = document.querySelector('.thumbnails');
     thumbnailsContainer.innerHTML = '';
-    for (let i = thumbnailStartIndex; i < Math.min(thumbnailStartIndex + maxVisibleThumbnails, images.length); i++) {
+    
+    const end = Math.min(thumbnailStartIndex + maxVisibleThumbnails, images.length);
+    
+    for (let i = thumbnailStartIndex; i < end; i++) {
         const thumbnailLink = document.createElement('a');
         thumbnailLink.href = '#';
         thumbnailLink.className = 'thumbnail-link mx-1';
@@ -145,23 +164,14 @@ function updateThumbnails() {
 
         const thumbnailImg = document.createElement('img');
         thumbnailImg.src = '<?= Url::to('@web/') ?>' + images[i];
-        thumbnailImg.className = 'img-thumbnail';
+        thumbnailImg.className = `img-thumbnail${i === currentPhotoIndex ? ' selected-thumbnail' : ''}`;
         thumbnailImg.alt = 'Thumbnail';
 
         thumbnailLink.appendChild(thumbnailImg);
         thumbnailsContainer.appendChild(thumbnailLink);
     }
+    
     highlightThumbnail(currentPhotoIndex);
-}
-
-function adjustThumbnailScroll() {
-    if (currentPhotoIndex < thumbnailStartIndex) {
-        thumbnailStartIndex = currentPhotoIndex;
-    } else if (currentPhotoIndex >= thumbnailStartIndex + maxVisibleThumbnails) {
-        thumbnailStartIndex = currentPhotoIndex - maxVisibleThumbnails + 1;
-    }
-    updateThumbnails();
-    highlightThumbnail(currentPhotoIndex); // Обновление выделения миниатюры после прокрутки
 }
 </script>
 
